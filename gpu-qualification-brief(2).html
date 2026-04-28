@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPU Cluster Qualification Brief — SigmaEdge Capital</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0a0c10;
+  --ink2: #1a1e28;
+  --ink3: #252a38;
+  --border: #2a3048;
+  --border-light: #e2e6f0;
+  --mid: #8892a8;
+  --muted: #b0b8cc;
+  --page: #f7f8fc;
+  --white: #ffffff;
+  --accent: #0047cc;
+  --accent-light: #e8effe;
+  --accent-mid: #3366dd;
+  --green: #007a4c;
+  --green-bg: #e6f5ee;
+  --orange: #b84c00;
+  --orange-bg: #fff0e6;
+  --red: #cc2200;
+  --serif: 'Syne', sans-serif;
+  --mono: 'DM Mono', monospace;
+  --body: 'DM Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--body);
+  background: var(--page);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ─── HEADER ─────────────────────────────────────── */
+.site-header {
+  background: var(--ink);
+  padding: 20px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  color: var(--white);
+}
+.logo em { color: #4d88ff; font-style: normal; }
+.header-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--mid);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+/* ─── HERO ────────────────────────────────────────── */
+.hero {
+  background: var(--ink2);
+  padding: 64px 48px 56px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 340px; height: 340px;
+  background: radial-gradient(circle, rgba(0,71,204,.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #0047cc, transparent 60%);
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #4d88ff;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 24px; height: 1px;
+  background: #4d88ff;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1.15;
+  max-width: 680px;
+  margin-bottom: 20px;
+}
+.hero h1 span { color: #4d88ff; }
+.hero-desc {
+  font-size: 15px;
+  color: var(--muted);
+  max-width: 580px;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+.hero-demand {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+.demand-pill {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--border);
+  padding: 5px 14px;
+  border-radius: 40px;
+  letter-spacing: .04em;
+}
+.demand-pill strong { color: #4d88ff; font-weight: 400; }
+
+/* ─── LAYOUT ──────────────────────────────────────── */
+.page-body {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+/* ─── PROGRESS ────────────────────────────────────── */
+.progress-bar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 40px;
+  align-items: center;
+}
+.prog-step {
+  flex: 1;
+  height: 3px;
+  background: var(--border-light);
+  border-radius: 2px;
+  transition: background .3s;
+  cursor: pointer;
+  position: relative;
+}
+.prog-step.done { background: var(--accent); }
+.prog-step.active { background: var(--accent-mid); }
+.prog-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--mid);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-top: 40px;
+}
+
+/* ─── SECTION ─────────────────────────────────────── */
+.form-section {
+  margin-bottom: 40px;
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow .2s;
+}
+.form-section:focus-within {
+  box-shadow: 0 0 0 3px rgba(0,71,204,.08);
+}
+.section-head {
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--white);
+}
+.section-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+  background: var(--accent-light);
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  color: var(--ink);
+}
+.section-subtitle {
+  font-size: 12px;
+  color: var(--mid);
+  margin-top: 2px;
+}
+.section-body {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ─── FIELD ───────────────────────────────────────── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.field-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.field-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink2);
+  line-height: 1.4;
+  flex: 1;
+}
+.badge-wrap {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  padding: 3px 9px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all .15s;
+  user-select: none;
+}
+.badge-m {
+  background: var(--orange-bg);
+  color: var(--orange);
+  border-color: rgba(184,76,0,.2);
+}
+.badge-d {
+  background: var(--green-bg);
+  color: var(--green);
+  border-color: rgba(0,122,76,.2);
+}
+.badge-toggle {
+  background: #f0f2f7;
+  color: var(--muted);
+  border-color: var(--border-light);
+}
+.badge-toggle:hover { background: var(--accent-light); color: var(--accent); border-color: rgba(0,71,204,.2); }
+
+/* ─── INPUTS ──────────────────────────────────────── */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+select,
+textarea {
+  font-family: var(--body);
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--page);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 10px 14px;
+  width: 100%;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+  -webkit-appearance: none;
+}
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0,71,204,.1);
+  background: var(--white);
+}
+textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238892a8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+.field-hint {
+  font-size: 11px;
+  color: var(--mid);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* ─── RADIO / CHECKBOX GROUP ──────────────────────── */
+.choice-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.choice-btn {
+  font-family: var(--body);
+  font-size: 13px;
+  padding: 7px 16px;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  background: var(--page);
+  color: var(--ink2);
+  cursor: pointer;
+  transition: all .15s;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.choice-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.choice-btn.selected { background: var(--accent); color: var(--white); border-color: var(--accent); }
+.choice-btn.selected .check-icon { opacity: 1; }
+.check-icon { opacity: 0; font-size: 11px; transition: opacity .15s; }
+
+/* ─── TWO COL ─────────────────────────────────────── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+/* ─── RAPID FIRE (Priority Questions) ────────────── */
+.priority-section {
+  background: var(--ink2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 40px;
+}
+.priority-head {
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.priority-head .section-title { color: var(--white); }
+.priority-head .section-subtitle { color: var(--mid); }
+.priority-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: #4d88ff;
+  background: rgba(77,136,255,.12);
+  border: 1px solid rgba(77,136,255,.2);
+  padding: 3px 10px;
+  border-radius: 4px;
+}
+.priority-body {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.priority-field .field-label { color: #d8e0f0; }
+.priority-field .choice-btn {
+  background: rgba(255,255,255,.06);
+  border-color: var(--border);
+  color: var(--muted);
+}
+.priority-field .choice-btn:hover {
+  border-color: #4d88ff;
+  color: #4d88ff;
+  background: rgba(77,136,255,.1);
+}
+.priority-field .choice-btn.selected {
+  background: #0047cc;
+  border-color: #0047cc;
+  color: var(--white);
+}
+.priority-field input[type="text"],
+.priority-field textarea,
+.priority-field select {
+  background: rgba(255,255,255,.06);
+  border-color: var(--border);
+  color: var(--white);
+}
+.priority-field input[type="text"]:focus,
+.priority-field textarea:focus,
+.priority-field select:focus {
+  background: rgba(255,255,255,.1);
+  border-color: #4d88ff;
+  box-shadow: 0 0 0 3px rgba(77,136,255,.15);
+}
+.priority-field input::placeholder,
+.priority-field textarea::placeholder { color: var(--mid); }
+.priority-field select option { background: var(--ink2); color: var(--white); }
+
+/* ─── CONTACT ─────────────────────────────────────── */
+.contact-section {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 40px;
+}
+
+/* ─── SUBMIT ──────────────────────────────────────── */
+.submit-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 8px;
+}
+.submit-note {
+  font-size: 12px;
+  color: var(--mid);
+  max-width: 400px;
+  line-height: 1.6;
+}
+.submit-note strong { color: var(--ink2); }
+.btn-submit {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  color: var(--white);
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  padding: 14px 36px;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-submit:hover { background: #003ab0; }
+.btn-submit:active { transform: scale(.98); }
+.btn-arrow { font-size: 18px; transition: transform .15s; }
+.btn-submit:hover .btn-arrow { transform: translateX(3px); }
+
+/* ─── SUCCESS ─────────────────────────────────────── */
+.success-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,12,16,.85);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+.success-overlay.show { display: flex; }
+.success-card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 48px;
+  max-width: 480px;
+  width: 90%;
+  text-align: center;
+  animation: pop .3s ease;
+}
+@keyframes pop {
+  from { transform: scale(.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.success-icon {
+  width: 56px; height: 56px;
+  background: var(--accent-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 24px;
+}
+.success-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.success-body {
+  font-size: 14px;
+  color: var(--mid);
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+.btn-close {
+  font-family: var(--body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-light);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 28px;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btn-close:hover { background: #d0dcff; }
+
+/* ─── LEGEND ──────────────────────────────────────── */
+.legend-bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 28px;
+  background: #f0f2f7;
+  border-radius: 8px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--ink2);
+}
+.legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 2px;
+}
+
+/* ─── DIVIDER ─────────────────────────────────────── */
+.field-divider {
+  height: 1px;
+  background: var(--border-light);
+  margin: 4px 0;
+}
+
+/* ─── SCROLL REVEAL ───────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .5s ease, transform .5s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ─── FOOTER ──────────────────────────────────────── */
+.page-footer {
+  background: var(--ink);
+  border-top: 1px solid var(--border);
+  padding: 24px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.footer-logo { font-family: var(--serif); font-size: 14px; font-weight: 700; color: var(--white); }
+.footer-logo em { color: #4d88ff; font-style: normal; }
+.footer-legal { font-family: var(--mono); font-size: 10px; color: var(--mid); letter-spacing: .08em; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="logo">SIGMA<em>EDGE</em> CAPITAL</div>
+  <div class="header-tag">GPU Infrastructure // Qualification Portal</div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Client Qualification Brief</div>
+  <h1>Large-Scale GPU<br><span>Cluster Request</span></h1>
+  <p class="hero-desc">Complete this brief prior to pricing, allocation, or delivery discussions. All fields are classified as Mandatory (M) or Desirable (D) to ensure rapid alignment with current inventory including B200/B300 capacity.</p>
+  <div class="hero-demand">
+    <div class="demand-pill">Active: <strong>H100 256-node / InfiniBand</strong></div>
+    <div class="demand-pill">Active: <strong>H200 256-node / InfiniBand</strong></div>
+    <div class="demand-pill">Active: <strong>A100 256-node</strong></div>
+    <div class="demand-pill">Available: <strong>B200 / B300 Capacity</strong></div>
+  </div>
+</section>
+
+<!-- FORM -->
+<main class="page-body">
+
+  <div class="legend-bar reveal">
+    <span style="font-family:var(--mono);font-size:11px;color:var(--mid);letter-spacing:.08em;text-transform:uppercase;margin-right:4px;">Classification:</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--orange-bg);border:1px solid rgba(184,76,0,.3);"></span><span class="badge badge-m" style="pointer-events:none;">M</span> Mandatory requirement</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--green-bg);border:1px solid rgba(0,122,76,.3);"></span><span class="badge badge-d" style="pointer-events:none;">D</span> Desirable / flexible</span>
+    <span style="font-size:11px;color:var(--mid);margin-left:auto;">Toggle each field's classification as needed</span>
+  </div>
+
+  <form id="qualForm" onsubmit="handleSubmit(event)" novalidate>
+
+    <!-- Formspree config fields -->
+    <input type="hidden" name="_subject" value="GPU Cluster Qualification Brief — New Submission">
+    <input type="hidden" name="_replyto" value="">
+    <!-- _replyto is auto-populated from the email field via JS on submit -->
+
+    <!-- ── CONTACT INFO ── -->
+    <div class="contact-section reveal">
+      <div class="section-head">
+        <div class="section-num">0</div>
+        <div>
+          <div class="section-title">Contact Information</div>
+          <div class="section-subtitle">Who should we follow up with?</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="two-col">
+          <div class="field">
+            <div class="field-label">Full Name <span style="color:var(--red)">*</span></div>
+            <input type="text" name="contact_name" placeholder="Jane Smith" required>
+          </div>
+          <div class="field">
+            <div class="field-label">Company / Organization <span style="color:var(--red)">*</span></div>
+            <input type="text" name="company" placeholder="Acme AI Inc." required>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="field">
+            <div class="field-label">Email Address <span style="color:var(--red)">*</span></div>
+            <input type="email" name="email" placeholder="jane@company.com" required>
+          </div>
+          <div class="field">
+            <div class="field-label">Phone / Signal</div>
+            <input type="tel" name="phone" placeholder="+1 (000) 000-0000">
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-label">Role / Title</div>
+          <input type="text" name="role" placeholder="VP Infrastructure, CTO, Procurement Lead…">
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 4 FIRST: RAPID FIRE ── -->
+    <div class="priority-section reveal">
+      <div class="priority-head">
+        <div>
+          <div class="section-title">Priority Qualification Questions</div>
+          <div class="section-subtitle">Complete these four questions first — required for rapid first-pass assessment</div>
+        </div>
+        <span class="priority-tag">RAPID FIRST PASS</span>
+      </div>
+      <div class="priority-body">
+
+        <div class="field priority-field">
+          <div class="field-label">Is H100, H200, or A100 an exact SKU requirement — or are equivalent / newer GPUs (B200, B300) acceptable?</div>
+          <div class="choice-group" data-multi="false">
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Exact SKU only</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Newer equivalents acceptable</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Open to any equivalent compute</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Prefer B200/B300</div>
+          </div>
+          <input type="hidden" name="pq1">
+        </div>
+
+        <div class="field-divider"></div>
+
+        <div class="field priority-field">
+          <div class="field-label">Is InfiniBand mandatory — or would high-speed Ethernet (400G RoCE) be acceptable?</div>
+          <div class="choice-group" data-multi="false">
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> InfiniBand mandatory</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> High-speed Ethernet acceptable</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Either acceptable</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> No preference</div>
+          </div>
+          <input type="hidden" name="pq2">
+        </div>
+
+        <div class="field-divider"></div>
+
+        <div class="field priority-field">
+          <div class="field-label">Is the 256-node quantity fixed — or is equivalent total GPU count or aggregate compute capacity acceptable?</div>
+          <div class="choice-group" data-multi="false">
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Fixed at 256 nodes</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Equivalent GPU count acceptable</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Total FLOPS / compute matters more</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Flexible</div>
+          </div>
+          <input type="hidden" name="pq3">
+        </div>
+
+        <div class="field-divider"></div>
+
+        <div class="field priority-field">
+          <div class="field-label">Are there location or delivery timeline constraints?</div>
+          <div class="two-col" style="gap:12px;">
+            <div>
+              <div class="field-hint" style="margin-bottom:6px;color:var(--mid);">Preferred region / geography</div>
+              <input type="text" name="pq4_location" placeholder="US East, EU, Asia-Pacific…">
+            </div>
+            <div>
+              <div class="field-hint" style="margin-bottom:6px;color:var(--mid);">Required delivery / start date</div>
+              <input type="text" name="pq4_timeline" placeholder="Within 30 days, Q3 2026…">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── SECTION 3.1: GPU ── -->
+    <div class="form-section reveal">
+      <div class="section-head">
+        <div class="section-num">3.1</div>
+        <div>
+          <div class="section-title">GPU Requirements</div>
+          <div class="section-subtitle">Model, quantity, form factor, and compute specifications</div>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="field">
+          <div class="field-header">
+            <label class="field-label">Required GPU model(s)</label>
+            <div class="badge-wrap"><span class="badge badge-m" onclick="cycleBadge(this)" title="Toggle M/D">M</span></div>
+          </div>
+          <div class="choice-group" data-multi="true">
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> A100</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> H100</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> H200</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> B200</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> B300</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Open / equivalent</div>
+          </div>
+          <input type="hidden" name="gpu_model">
+        </div>
+
+        <div class="field">
+          <div class="field-header">
+            <label class="field-label">Is this an exact SKU requirement, or are equivalent / newer GPUs acceptable?</label>
+            <div class="badge-wrap"><span class="badge badge-m" onclick="cycleBadge(this)" title="Toggle M/D">M</span></div>
+          </div>
+          <div class="choice-group" data-multi="false">
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Exact SKU required</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Equivalent acceptable</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Newer generation preferred</div>
+          </div>
+          <input type="hidden" name="gpu_sku_flex">
+        </div>
+
+        <div class="two-col">
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Node quantity requested</label>
+              <div class="badge-wrap"><span class="badge badge-m" onclick="cycleBadge(this)" title="Toggle M/D">M</span></div>
+            </div>
+            <input type="number" name="node_qty" placeholder="e.g. 256">
+            <div class="field-hint">Is this fixed, or is flexibility permitted based on total GPU count?</div>
+          </div>
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Preferred form factor</label>
+              <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+            </div>
+            <div class="choice-group" data-multi="false">
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> SXM</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> PCIe</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> No preference</div>
+            </div>
+            <input type="hidden" name="form_factor">
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Minimum GPU memory per GPU</label>
+              <div class="badge-wrap"><span class="badge badge-m" onclick="cycleBadge(this)" title="Toggle M/D">M</span></div>
+            </div>
+            <select name="gpu_mem">
+              <option value="">Select minimum…</option>
+              <option>40 GB</option>
+              <option>80 GB</option>
+              <option>141 GB (H200)</option>
+              <option>180 GB (B200)</option>
+              <option>192 GB</option>
+              <option>No minimum</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Virtualization / instance type</label>
+              <div class="badge-wrap"><span class="badge badge-m" onclick="cycleBadge(this)" title="Toggle M/D">M</span></div>
+            </div>
+            <div class="choice-group" data-multi="true">
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Bare metal</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> MIG</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Virtual GPU</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> No requirement</div>
+            </div>
+            <input type="hidden" name="virtualization">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── SECTION 3.2: NETWORKING ── -->
+    <div class="form-section reveal">
+      <div class="section-head">
+        <div class="section-num">3.2</div>
+        <div>
+          <div class="section-title">Networking Requirements</div>
+          <div class="section-subtitle">InfiniBand, topology, RDMA, and bandwidth specifications</div>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="field">
+          <div class="field-header">
+            <label class="field-label">Is InfiniBand mandatory or optional?</label>
+            <div class="badge-wrap"><span class="badge badge-m" onclick="cycleBadge(this)" title="Toggle M/D">M</span></div>
+          </div>
+          <div class="choice-group" data-multi="false">
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Mandatory</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Preferred</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Optional</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> High-speed Ethernet acceptable</div>
+          </div>
+          <input type="hidden" name="infiniband">
+        </div>
+
+        <div class="two-col">
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">InfiniBand speed required</label>
+              <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+            </div>
+            <select name="ib_speed">
+              <option value="">Select speed…</option>
+              <option>200G HDR</option>
+              <option>400G NDR</option>
+              <option>800G XDR</option>
+              <option>No requirement</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Network topology</label>
+              <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+            </div>
+            <div class="choice-group" data-multi="false">
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Non-blocking required</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Blocking acceptable</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> No requirement</div>
+            </div>
+            <input type="hidden" name="topology">
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-header">
+            <label class="field-label">Special networking requirements (RDMA, NCCL, East-West bandwidth)</label>
+            <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+          </div>
+          <div class="choice-group" data-multi="true">
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> RDMA required</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> NCCL optimized</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> High East-West BW</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> None specified</div>
+          </div>
+          <input type="hidden" name="rdma">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── SECTION 3.3: CPU & MEMORY ── -->
+    <div class="form-section reveal">
+      <div class="section-head">
+        <div class="section-num">3.3</div>
+        <div>
+          <div class="section-title">CPU & Memory Requirements</div>
+          <div class="section-subtitle">Host processor, RAM, and interconnect specifications per node</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="two-col">
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">CPU vendor / generation requirement</label>
+              <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+            </div>
+            <div class="choice-group" data-multi="false">
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Intel (Sapphire Rapids+)</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> AMD (Genoa/Turin+)</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> ARM (Grace)</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> No preference</div>
+            </div>
+            <input type="hidden" name="cpu_vendor">
+          </div>
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Minimum CPU core count per node</label>
+              <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+            </div>
+            <input type="number" name="cpu_cores" placeholder="e.g. 64">
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Minimum RAM per node (GB)</label>
+              <div class="badge-wrap"><span class="badge badge-m" onclick="cycleBadge(this)" title="Toggle M/D">M</span></div>
+            </div>
+            <input type="number" name="ram_gb" placeholder="e.g. 512">
+          </div>
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Will nodes handle CPU-heavy preprocessing?</label>
+              <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+            </div>
+            <div class="choice-group" data-multi="false">
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Yes</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> No</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Unknown</div>
+            </div>
+            <input type="hidden" name="cpu_preprocessing">
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-header">
+            <label class="field-label">NUMA, PCIe lane, or host-to-GPU bandwidth constraints</label>
+            <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+          </div>
+          <textarea name="numa_constraints" placeholder="Describe any specific NUMA topology, PCIe gen, or h2d bandwidth requirements…"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 3.4: STORAGE ── -->
+    <div class="form-section reveal">
+      <div class="section-head">
+        <div class="section-num">3.4</div>
+        <div>
+          <div class="section-title">Storage Requirements</div>
+          <div class="section-subtitle">Local NVMe, shared storage, throughput, and checkpointing</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="two-col">
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Local NVMe per node</label>
+              <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+            </div>
+            <div class="choice-group" data-multi="false">
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Required</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Preferred</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Not required</div>
+            </div>
+            <input type="hidden" name="nvme">
+          </div>
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">NVMe capacity per node (TB)</label>
+              <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+            </div>
+            <input type="number" name="nvme_tb" placeholder="e.g. 4">
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-header">
+            <label class="field-label">Shared storage type required</label>
+            <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+          </div>
+          <div class="choice-group" data-multi="true">
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Lustre</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> BeeGFS</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> NFS</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Object storage</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> None required</div>
+          </div>
+          <input type="hidden" name="shared_storage">
+        </div>
+        <div class="two-col">
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Total usable capacity required (TB)</label>
+              <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+            </div>
+            <input type="number" name="storage_capacity" placeholder="e.g. 500">
+          </div>
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Throughput / IOPS / checkpointing needs</label>
+              <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+            </div>
+            <input type="text" name="storage_perf" placeholder="e.g. 500 GB/s aggregate, frequent checkpointing…">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 3.5: DEPLOYMENT ── -->
+    <div class="form-section reveal">
+      <div class="section-head">
+        <div class="section-num">3.5</div>
+        <div>
+          <div class="section-title">Deployment & Location</div>
+          <div class="section-subtitle">Geography, timeline, commitment term, and delivery requirements</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="two-col">
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Preferred geography / data center region</label>
+              <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+            </div>
+            <div class="choice-group" data-multi="true">
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> US East</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> US West</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> US Central</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> EU</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> APAC</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Flexible</div>
+            </div>
+            <input type="hidden" name="geography">
+          </div>
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Single-site deployment required?</label>
+              <div class="badge-wrap"><span class="badge badge-m" onclick="cycleBadge(this)" title="Toggle M/D">M</span></div>
+            </div>
+            <div class="choice-group" data-multi="false">
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Single-site required</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Multi-site acceptable</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> No preference</div>
+            </div>
+            <input type="hidden" name="single_site">
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Deployment type</label>
+              <div class="badge-wrap"><span class="badge badge-m" onclick="cycleBadge(this)" title="Toggle M/D">M</span></div>
+            </div>
+            <div class="choice-group" data-multi="false">
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Cloud / hosted</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Bare metal</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Dedicated cluster</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> On-premises</div>
+            </div>
+            <input type="hidden" name="deployment_type">
+          </div>
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Required delivery / availability date</label>
+              <div class="badge-wrap"><span class="badge badge-m" onclick="cycleBadge(this)" title="Toggle M/D">M</span></div>
+            </div>
+            <input type="text" name="delivery_date" placeholder="e.g. Within 45 days, Q3 2026, ASAP…">
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-header">
+            <label class="field-label">Commitment duration</label>
+            <div class="badge-wrap"><span class="badge badge-m" onclick="cycleBadge(this)" title="Toggle M/D">M</span></div>
+          </div>
+          <div class="choice-group" data-multi="false">
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Monthly</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> 6 months</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> 1 year</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> 2 years</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> 3 years</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> 5+ years</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> TBD</div>
+          </div>
+          <input type="hidden" name="commitment">
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 3.6: COMMERCIAL ── -->
+    <div class="form-section reveal">
+      <div class="section-head">
+        <div class="section-num">3.6</div>
+        <div>
+          <div class="section-title">Commercial & Compliance Constraints</div>
+          <div class="section-subtitle">Budget, compliance, OEM preferences, and infrastructure constraints</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="two-col">
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Anticipated budget range (monthly)</label>
+              <div class="badge-wrap"><span class="badge badge-m" onclick="cycleBadge(this)" title="Toggle M/D">M</span></div>
+            </div>
+            <select name="budget">
+              <option value="">Select range…</option>
+              <option>Under $500K/mo</option>
+              <option>$500K – $1M/mo</option>
+              <option>$1M – $5M/mo</option>
+              <option>$5M – $10M/mo</option>
+              <option>$10M – $25M/mo</option>
+              <option>$25M+/mo</option>
+              <option>Prefer not to disclose</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Multitenancy restrictions</label>
+              <div class="badge-wrap"><span class="badge badge-m" onclick="cycleBadge(this)" title="Toggle M/D">M</span></div>
+            </div>
+            <div class="choice-group" data-multi="false">
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Dedicated / no sharing</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> Multitenant acceptable</div>
+              <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> No restriction</div>
+            </div>
+            <input type="hidden" name="multitenancy">
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-header">
+            <label class="field-label">Compliance, security, or data residency requirements</label>
+            <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+          </div>
+          <div class="choice-group" data-multi="true">
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> SOC 2 Type II</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> ISO 27001</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> FedRAMP</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> HIPAA</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> ITAR / EAR</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> GDPR / EU residency</div>
+            <div class="choice-btn" onclick="toggle(this)"><span class="check-icon">✓</span> None</div>
+          </div>
+          <input type="hidden" name="compliance">
+        </div>
+        <div class="two-col">
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">OEM / vendor preferences or exclusions</label>
+              <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+            </div>
+            <input type="text" name="oem_pref" placeholder="e.g. Supermicro only, no Dell, NVIDIA OEM required…">
+          </div>
+          <div class="field">
+            <div class="field-header">
+              <label class="field-label">Power, cooling, or rack space constraints</label>
+              <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+            </div>
+            <input type="text" name="power_constraints" placeholder="e.g. Liquid cooling required, 5MW cap, 42U racks…">
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-header">
+            <label class="field-label">Additional notes, context, or requirements</label>
+            <div class="badge-wrap"><span class="badge badge-d" onclick="cycleBadge(this)" title="Toggle M/D">D</span></div>
+          </div>
+          <textarea name="notes" placeholder="Anything else we should know — use case, model scale, training vs. inference, existing infrastructure, urgency…" style="min-height:100px;"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SUBMIT ── -->
+    <div class="submit-area reveal">
+      <div class="submit-note">
+        <strong>Confidential.</strong> Information provided is used solely for infrastructure qualification purposes. SigmaEdge does not share client requirements with third parties without explicit authorization.
+      </div>
+      <button type="submit" class="btn-submit">
+        Submit Qualification Brief
+        <span class="btn-arrow">→</span>
+      </button>
+    </div>
+
+  </form>
+</main>
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-card">
+    <div class="success-icon">✓</div>
+    <div class="success-title">Brief Received</div>
+    <div class="success-body">Your qualification brief has been submitted. A member of the SigmaEdge infrastructure team will review your requirements and be in touch within one business day.</div>
+    <button class="btn-close" onclick="closeSuccess()">Return to form</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <div class="footer-logo">SIGMA<em>EDGE</em> CAPITAL</div>
+  <div class="footer-legal">CONFIDENTIAL // GPU INFRASTRUCTURE QUALIFICATION // © 2026 SIGMAEDGE LLC</div>
+</footer>
+
+<script>
+// ── CHOICE TOGGLE ──────────────────────────────────────────────────
+function toggle(btn) {
+  const group = btn.closest('.choice-group');
+  const multi = group.dataset.multi === 'true';
+  if (!multi) {
+    group.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  } else {
+    btn.classList.toggle('selected');
+  }
+  // sync hidden input
+  const hidden = group.nextElementSibling;
+  if (hidden && hidden.type === 'hidden') {
+    const sel = [...group.querySelectorAll('.choice-btn.selected')].map(b => b.textContent.replace('✓','').trim());
+    hidden.value = sel.join(', ');
+  }
+}
+
+// ── BADGE CYCLE M/D ───────────────────────────────────────────────
+function cycleBadge(badge) {
+  if (badge.classList.contains('badge-m')) {
+    badge.classList.remove('badge-m');
+    badge.classList.add('badge-d');
+    badge.textContent = 'D';
+  } else {
+    badge.classList.remove('badge-d');
+    badge.classList.add('badge-m');
+    badge.textContent = 'M';
+  }
+}
+
+// ── SCROLL REVEAL ─────────────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach((el, i) => {
+  el.style.transitionDelay = (i * 0.04) + 's';
+  observer.observe(el);
+});
+
+// ── FORM SUBMIT → FORMSPREE ───────────────────────────────────────
+// SETUP: Replace YOUR_FORM_ID below with the ID from formspree.io
+// Steps: 1) Go to formspree.io  2) Sign up free  3) New Form
+//        4) Copy the ID (e.g. "xyzabc12")  5) Paste below
+const FORMSPREE_ID = 'mdayrnew';
+
+async function handleSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const btn  = form.querySelector('.btn-submit');
+
+  // Validate required fields
+  const required = form.querySelectorAll('[required]');
+  let valid = true;
+  required.forEach(field => {
+    if (!field.value.trim()) {
+      field.style.borderColor = 'var(--red)';
+      field.style.boxShadow   = '0 0 0 3px rgba(204,34,0,.1)';
+      valid = false;
+      field.addEventListener('input', () => {
+        field.style.borderColor = '';
+        field.style.boxShadow   = '';
+      }, { once: true });
+    }
+  });
+  if (!valid) {
+    form.querySelector('[required]').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  // Wire _replyto to submitter's email so replies go directly to them
+  const emailField = form.querySelector('[name="email"]');
+  const replyTo    = form.querySelector('[name="_replyto"]');
+  if (emailField && replyTo) replyTo.value = emailField.value;
+
+  // Sync all choice-group selections into hidden inputs before submit
+  form.querySelectorAll('.choice-group').forEach(group => {
+    const hidden = group.nextElementSibling;
+    if (hidden && hidden.type === 'hidden') {
+      const sel = [...group.querySelectorAll('.choice-btn.selected')]
+        .map(b => b.textContent.replace('✓','').trim());
+      hidden.value = sel.join(', ');
+    }
+  });
+
+  // Loading state
+  btn.disabled = true;
+  btn.innerHTML = 'Submitting… <span class="btn-arrow">⟳</span>';
+
+  try {
+    const data = new FormData(form);
+
+    if (FORMSPREE_ID === 'YOUR_FORM_ID') {
+      // Demo mode — show success without real POST
+      await new Promise(r => setTimeout(r, 800));
+      showSuccess();
+      return;
+    }
+
+    const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      method:  'POST',
+      body:    data,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (res.ok) {
+      showSuccess();
+      form.reset();
+      form.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+    } else {
+      const json = await res.json();
+      const msg  = json?.errors?.map(e => e.message).join(', ') || 'Submission failed. Please email contact@sigmaedge.co directly.';
+      btn.innerHTML = 'Submit Qualification Brief <span class="btn-arrow">→</span>';
+      btn.disabled  = false;
+      alert(msg);
+    }
+  } catch (err) {
+    btn.innerHTML = 'Submit Qualification Brief <span class="btn-arrow">→</span>';
+    btn.disabled  = false;
+    alert('Network error. Please email contact@sigmaedge.co directly.');
+  }
+}
+
+function showSuccess() {
+  document.getElementById('successOverlay').classList.add('show');
+  document.querySelector('.btn-submit').innerHTML = 'Submit Qualification Brief <span class="btn-arrow">→</span>';
+  document.querySelector('.btn-submit').disabled = false;
+}
+
+function closeSuccess() {
+  document.getElementById('successOverlay').classList.remove('show');
+}
+</script>
+</body>
+</html>
